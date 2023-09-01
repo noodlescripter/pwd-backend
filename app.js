@@ -11,6 +11,8 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const app = express();
 require('dotenv').config();
+const https = require('https');
+const fs = require('fs');
 
 const PORT = 8999;
 
@@ -132,7 +134,13 @@ app.post('/mypass/new', async (req, res) => {
     }
 });
 
-/* Start the server */
-app.listen(PORT, () => {
+https
+  .createServer(
+    {
+      key: fs.readFileSync("server.key"),
+      cert: fs.readFileSync("server.cert"),
+    },
+    app
+  ).listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
